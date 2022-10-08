@@ -32,18 +32,17 @@ def scanPort(target, port):
         sys.exit()
     sys.exit()
      
-def updateResult():
-    message = " [ " + str(len(ports)) + " / " + str(init_port_f) + " ] ~ " + str(target)
-    L27.configure(text = message)
+
  
 def scanUDP(ip_addr):
-    version=f'\nNmap Version: ,{scanner.nmap_version()}'
+    version=f'Nmap Version: ,{scanner.nmap_version()}'
     scanner.scan(ip_addr, '1-100', '-v -sU')
-    scinfo=scanner.scaninfo()
+    scinfo=f'{scanner.scaninfo()}'
     ip_status=f'Ip Status: , {scanner[ip_addr].state()}'
-    p_rotocol=f'protocols:,{scanner[ip_addr].all_protocols()}\n'
+    p_rotocol=f'protocols:,{scanner[ip_addr].all_protocols()}'
     # o_port="Open Ports: ", scanner[ip_addr]['udp'].keys()
     log.append([version,scinfo,ip_status,p_rotocol])
+    updateResult()
 
 
 
@@ -57,16 +56,19 @@ def comprehensiveScan(ip_addr):
     p_rotocol=f'protocols:,{scanner[ip_addr].all_protocols()}\n'
     # print("Open Ports: ", scanner[ip_addr]['tcp'].keys())
     log.append([version,scinfo,ip_status,p_rotocol])
+    updateResult()
 
 def OSDetection(ip_addr):
     scinfo=scanner.scan("127.0.0.1", arguments="-O")['scan']['127.0.0.1']['osmatch']
     log.append(scinfo)
+    updateResult()
 
 def pingScan(ip_addr):
     scanner.scan(hosts=f'{ip_addr}/24', arguments='-n -sP -PE -PA21,23,80,3389')
     hosts_list = [(x, scanner[x]['status']['state']) for x in scanner.all_hosts()]
     for host, status in hosts_list:
         log.append('{0}:{1}'.format(host, status))
+    updateResult()
 
 
 def startScan():
@@ -79,7 +81,7 @@ def startScan():
     init_port_s = int(L24.get())
     init_port_f = int(L25.get())
     # Start writing the log file
-    log.append('------------> Port Scanner <-----------')
+    log.append('------------> Network Security Scanner <-----------')
     log.append('\n')
     log.append(' Target:\t' + str(target))
      
@@ -110,7 +112,7 @@ def saveScan():
     global log, target, ports, init_port_f
     # log[5] = " Result:\t[ " + str(len(ports)) + " / " + str(init_port_f) + " ]\n"
     with open('portscan-'+str(target)+'.txt', mode='wt', encoding='utf-8') as myfile:
-        myfile.write(str(log))
+            myfile.write(('\n').join(map(str,log)))
  
 def clearScan():
     listbox.delete(0, 'end')
@@ -135,9 +137,23 @@ def run_function():
     
     elif(var1=='Ping Scan'):
         temp=5
-    # else:
-    #     return 
+        
     return temp
+
+def updateResult():
+    var4=run_function()
+    if(var4==1):
+        message = " [ " + str(len(ports)) + " / " + str(init_port_f) + " ] ~ " + str(target)
+        L27.configure(text = message)
+
+    elif(var4==2):
+        L27.configure(text = log)
+    elif(var4==3):
+        L27.configure(text = log)
+    elif(var4==4):
+        L27.configure(text = log)
+    elif(var4==5):
+        L27.configure(text = log)
 
  
 # ==== GUI ====
@@ -146,8 +162,8 @@ gui.title('Port Scanner')
 gui.geometry("1000x600+250+100")
  
 # ==== Colors ====
-object_color = '#0a0a0a'
-background = '#f5f9fa'
+object_color = '#fafcfc'
+background = '#19191a'
 foreground = '#f7fbfc'
  
 gui.tk_setPalette(background=background, foreground=object_color, activeBackground=foreground,activeForeground=background, highlightColor=object_color, highlightBackground=object_color)
@@ -158,7 +174,7 @@ gui.tk_setPalette(background=background, foreground=object_color, activeBackgrou
 
 values=StringVar(gui)
 values.set("Choose...")
-L01 = Label(gui, text = "Scanning Method",  font=("Helvetica", 16, 'underline'))
+L01 = Label(gui, text = "Scanning Method")
 L01.place(x = 16, y = 40)
 L02=OptionMenu(gui,values, 'SYN ACK Scan','UDP Scan','Comprehensive Scan','OS Detection','Ping Scan')
 
@@ -166,8 +182,8 @@ L02.place(x = 180, y = 40)
 
 
 # ==== Labels ====
-L11 = Label(gui, text = "Port Scanner",  font=("Helvetica", 16, 'underline'))
-L11.place(x = 450, y = 10)
+L11 = Label(gui, text = "Network Security Scanner",  font=("Helvetica", 16, 'underline'))
+L11.place(x = 400, y = 10)
 
 L21 = Label(gui, text = "Target: ")
 L21.place(x = 16, y = 90)
