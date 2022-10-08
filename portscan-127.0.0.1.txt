@@ -1,0 +1,15 @@
+------------> Network Security Scanner <-----------
+
+
+ Target:	localhost
+ IP Adr.:	127.0.0.1
+ Ports: 	[ 1 / 8080 ]
+
+
+ Port 110 	[open]
+ Port 135 	[open]
+ Port 445 	[open]
+ Port 1434 	[open]
+ Port 5040 	[open]
+ Port 5357 	[open]
+ Port 7680 	[open]

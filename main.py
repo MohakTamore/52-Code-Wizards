@@ -162,8 +162,8 @@ gui.title('Port Scanner')
 gui.geometry("1000x600+250+100")
  
 # ==== Colors ====
-object_color = '#fafcfc'
-background = '#19191a'
+object_color = '#02f242'
+background = '#000712'
 foreground = '#f7fbfc'
  
 gui.tk_setPalette(background=background, foreground=object_color, activeBackground=foreground,activeForeground=background, highlightColor=object_color, highlightBackground=object_color)
